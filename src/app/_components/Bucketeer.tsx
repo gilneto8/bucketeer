@@ -167,7 +167,12 @@ export default function Bucketeer() {
               {colorDistanceWithThreshold(resultColor, 50).map(ral => {
                 const color = rals.find(_r => _r.id === ral.id)!;
                 return (
-                  <Badge className='mb-0.5' size='lg' style={{ backgroundColor: color.hex, color: getTextColorForBackground(color.hex) }}>
+                  <Badge
+                    key={ral.id}
+                    className='mb-0.5'
+                    size='lg'
+                    style={{ backgroundColor: color.hex, color: getTextColorForBackground(color.hex) }}
+                  >
                     {color.id} - {color.name}
                   </Badge>
                 );
