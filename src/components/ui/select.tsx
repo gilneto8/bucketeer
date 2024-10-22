@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils/misc';
-import { RalColor } from '@/assets/ralClassic';
+import { RalColor } from '@/utils/color';
 import { CircleX } from 'lucide-react';
 import { Button } from './button';
 
