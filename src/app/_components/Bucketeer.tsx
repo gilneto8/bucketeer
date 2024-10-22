@@ -9,8 +9,8 @@ import { Badge } from '@/components/ui/badge';
 import { Select } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { getTextColorForBackground } from '@/utils/fontColor';
-import { colorDistanceWithoutThreshold, RalColor, ralColors as rals, SimilarColor } from '@/assets/rals';
-import { hexToRgb, rgbToHex } from '@/utils/color';
+import { rals as ralsClassic } from '@/assets/ralClassic';
+import { colorDistance, hexToRgb, RalColor, rgbToHex, SimilarColor } from '@/utils/color';
 
 interface Color extends RalColor {
   runtimeId: string;
@@ -90,13 +90,13 @@ export default function Bucketeer() {
 
     const result = rgbToHex(r, g, b);
     setResultColor(result);
-    const sim = colorDistanceWithoutThreshold(result).filter(dist => dist.distance <= threshold);
+    const sim = colorDistance(result).filter(dist => dist.distance <= threshold);
     setSimilarColors(sim);
   };
 
   const updateThreshold = (t: number) => {
     setThreshold(t);
-    const sim = colorDistanceWithoutThreshold(resultColor).filter(dist => dist.distance <= t);
+    const sim = colorDistance(resultColor).filter(dist => dist.distance <= t);
     setSimilarColors(sim);
   };
 
@@ -112,7 +112,7 @@ export default function Bucketeer() {
           <div className='flex space-x-2'>
             <Select
               value={newColor}
-              options={rals}
+              options={ralsClassic}
               onChangeOption={setNewColor}
               variant='outline'
               size='default'

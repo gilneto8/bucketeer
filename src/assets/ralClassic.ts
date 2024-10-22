@@ -1,31 +1,6 @@
-import { hexToRgb } from '@/utils/color';
+import { RalColor } from '@/utils/color';
 
-export interface RalColor {
-  id: string;
-  name: string;
-  hex: string;
-}
-
-export interface SimilarColor extends RalColor {
-  distance: number;
-}
-
-export const colorDistanceWithoutThreshold = (color: string): SimilarColor[] => {
-  const rgb = hexToRgb(color);
-
-  const distances = ralColors.map(ral => {
-    const ref = hexToRgb(ral.hex);
-    const color = ralColors.find(_r => _r.id === ral.id)!;
-    return {
-      ...color,
-      distance: Math.sqrt(Math.pow(rgb.r - ref.r, 2) + Math.pow(rgb.g - ref.g, 2) + Math.pow(rgb.b - ref.b, 2)),
-    };
-  });
-
-  return distances;
-};
-
-export const ralColors: RalColor[] = [
+export const rals: RalColor[] = [
   { id: '1000', name: 'Green Beige', hex: '#BEBD7F' },
   { id: '1001', name: 'Beige', hex: '#C2B078' },
   { id: '1002', name: 'Sand Yellow', hex: '#C6A664' },
