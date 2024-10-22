@@ -210,7 +210,7 @@ export default function Bucketeer() {
               <Slider variant='outline' min={10} max={50} value={threshold} onChangeValue={updateThreshold} className='mb-6' />
               <div className='flex flex-col items-center w-full max-h-64 overflow-y-scroll'>
                 {similarColors.map(sim => (
-                  <div className='flex flex-row'>
+                  <div key={sim.id} className='flex flex-row'>
                     <Badge
                       key={sim.id}
                       className='mb-0.5 w-64'
