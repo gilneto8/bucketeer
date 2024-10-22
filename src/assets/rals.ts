@@ -6,18 +6,21 @@ export interface RalColor {
   hex: string;
 }
 
-export const colorDistanceWithThreshold = (color: string, threshold: number = 50): { id: string; distance: number }[] => {
+export interface SimilarColor extends RalColor {
+  distance: number;
+}
+
+export const colorDistanceWithoutThreshold = (color: string): SimilarColor[] => {
   const rgb = hexToRgb(color);
 
-  const distances = ralColors
-    .map(ral => {
-      const ref = hexToRgb(ral.hex);
-      return {
-        id: ral.id,
-        distance: Math.sqrt(Math.pow(rgb.r - ref.r, 2) + Math.pow(rgb.g - ref.g, 2) + Math.pow(rgb.b - ref.b, 2)),
-      };
-    })
-    .filter(dist => dist.distance <= threshold);
+  const distances = ralColors.map(ral => {
+    const ref = hexToRgb(ral.hex);
+    const color = ralColors.find(_r => _r.id === ral.id)!;
+    return {
+      ...color,
+      distance: Math.sqrt(Math.pow(rgb.r - ref.r, 2) + Math.pow(rgb.g - ref.g, 2) + Math.pow(rgb.b - ref.b, 2)),
+    };
+  });
 
   return distances;
 };
