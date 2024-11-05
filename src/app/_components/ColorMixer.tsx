@@ -8,16 +8,15 @@ import { Trash2, Edit2, Columns2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Select } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { getTextColorForBackground } from '@/utils/fontColor';
 import { rals as ralsClassic } from '@/assets/ralClassic';
-import { colorDistance, hexToRgb, RalColor, rgbToHex, SimilarColor } from '@/utils/color';
+import { calculateMixedColor, colorDistance, getTextColorForBackground, rgbToHex, type RalColor, type SimilarColor } from '@/utils/color';
 
 interface Color extends RalColor {
   runtimeId: string;
   quantity: number;
 }
 
-export default function Bucketeer() {
+export default function ColorMixer() {
   const [colors, setColors] = useState<Color[]>([]);
   const [compareColor, setCompareColor] = useState<RalColor>(null as unknown as RalColor);
   const [similarColors, setSimilarColors] = useState<SimilarColor[]>([]);
@@ -53,7 +52,6 @@ export default function Bucketeer() {
       const oldColor = colors.find(r => r.runtimeId === editingId)!;
       colors.splice(index, 1, { ...oldColor, hex: newColor!.hex, name: newColor!.name, quantity: newQuantity });
       setColors(colors);
-      // setColors([...colors, { runtimeId: Date.now().toString(), hex, quantity: newQuantity, name, id: newColor.id }]);
       setEditingId(null as unknown as string);
     } else {
       const color = colors.find(r => r.runtimeId === editingColor.runtimeId)!;
@@ -69,26 +67,14 @@ export default function Bucketeer() {
       return;
     }
 
-    let totalQuantity = 0;
-    let r = 0,
-      g = 0,
-      b = 0;
+    // Convert colors to format expected by calculateMixedColor
+    const colorMixInput = colors.map(color => ({
+      hex: color.hex,
+      quantity: color.quantity,
+    }));
 
-    colors.forEach(color => {
-      const rgb = hexToRgb(color.hex);
-      if (rgb) {
-        r += rgb.r * color.quantity;
-        g += rgb.g * color.quantity;
-        b += rgb.b * color.quantity;
-        totalQuantity += color.quantity;
-      }
-    });
-
-    r = Math.round(r / totalQuantity);
-    g = Math.round(g / totalQuantity);
-    b = Math.round(b / totalQuantity);
-
-    const result = rgbToHex(r, g, b);
+    const mixedRgb = calculateMixedColor(colorMixInput);
+    const result = rgbToHex(mixedRgb.r, mixedRgb.g, mixedRgb.b);
     setResultColor(result);
     const sim = colorDistance(result).filter(dist => dist.distance <= threshold);
     setSimilarColors(sim);
@@ -102,11 +88,9 @@ export default function Bucketeer() {
 
   return (
     <div className='container mx-auto p-4 max-w-md flex flex-col items-center'>
-      <h1 className='text-4xl font-bold mb-12'>Bucketeer</h1>
-
       <div className='mb-6 w-full space-y-4'>
         <div>
-          <Label htmlFor='colorPicker' className='mb-1 block'>
+          <Label htmlFor='colorPicker' className='mb-1 block font-bold'>
             Color:
           </Label>
           <div className='flex space-x-2'>
@@ -124,7 +108,6 @@ export default function Bucketeer() {
               value={newQuantity === 0 ? '' : newQuantity}
               onChange={e => {
                 const value = e.target.value;
-                // Only update the state if the value is a number or empty
                 if (value === '' || /^[0-9]+$/.test(value)) {
                   setNewQuantity(value === '' ? 0 : Number(value));
                 }
