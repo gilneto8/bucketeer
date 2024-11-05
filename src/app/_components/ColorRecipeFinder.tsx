@@ -12,8 +12,6 @@ import {
   getTextColorForBackground,
   calculateMixedColor,
   type RalColor,
-  type RGB,
-  type LAB,
 } from '@/utils/color';
 
 interface Solution {
@@ -49,7 +47,7 @@ export default function ColorRecipeFinder() {
     }));
 
     const allSolutions: Solution[][] = [];
-    let twoColorSolutions: Array<{ recipe: Solution[]; difference: number }> = [];
+    const twoColorSolutions: Array<{ recipe: Solution[]; difference: number }> = [];
 
     // Find single color solutions
     const singleColorSolutions = ralLabs
